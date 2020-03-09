@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+    namespace：指定接口类是哪个
+-->
+<mapper namespace="com.example.mapper.ArticleMapper">
+
+
+    <!--
+            type:其实没必要写全名因为已经在yml配置了简写
+    -->
+    <resultMap id="articleXmlMap" type="com.example.entity.Article">
+
+        <!--主键字段-->
+        <id column="id" property="id"></id>
+
+        <!--非主键字段-->
+        <result column="name" property="name"></result>
+
+        <result column="author_id" property="authorId"></result>
+
+        <!--
+             配置文章对应的作者的信息
+             property="author" 指的是 private Author author;
+             javaType：指明下面的属性封装到哪个类里面
+        -->
+
+        <association property="author" column="author_id" javaType="com.example.entity.Author">
+            <!--主键字段-->
+            <id column="author_id" property="id"></id>
+
+            <!--非主键字段-->
+            <result column="author_name" property="name"></result>
+        </association>
+
+    </resultMap>
+
+
+    <select id="findArticleAndAuthorNameXml" resultType="com.example.vo.ArticleAndAuthorNameVO">
+        SELECT a.*, au.name FROM article a JOIN author au ON a.author_id = au.id;
+    </select>
+
+
+    <!--
+        resultMap配置的时候column的名称其实是和查询语句中查询的字段名称对应的
+        如:au.name AS author_name  则resultMap中 <result column="author_name" property="name"></result>
+    -->
+    <select id="findArticleAll" resultMap="articleXmlMap">
+        SELECT a.*, au.name AS author_name, au.id as author_id FROM article a JOIN author au ON a.author_id = au.id;
+    </select>
+
+
+
+
+
+</mapper>

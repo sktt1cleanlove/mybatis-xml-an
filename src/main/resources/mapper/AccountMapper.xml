@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+    namespace：指定接口类是哪个
+-->
+<mapper namespace="com.example.mapper.AccountMapper">
+
+
+
+    <resultMap id="accountXmlMap" type="com.example.entity.Account">
+
+        <!--主键字段-->
+        <id column="id" property="id"></id>
+
+        <!--非主键字段-->
+        <result column="name" property="name"></result>
+        <!--故意把钱的字段写错使得和属性不一致-->
+        <result column="moeny" property="money"></result>
+        <result column="user_id" property="userId"></result>
+
+    </resultMap>
+
+
+    <!--
+
+        resultMap:
+                    1.resultMap是当表中字段名称和类中属性名称不一样的时候配置对应关系使用(有它就不需要resultType)
+                    2.注解配置的resultMap也可以拿到XML中引用
+
+    -->
+
+    <select id="findByIdXml" parameterType="Long" resultMap="accountXmlMap">
+        select * from account where id = #{xx};
+    </select>
+
+
+    <select id="findByAccountXml" parameterType="com.example.entity.Account" resultMap="accountXmlMap">
+        select * from account where 1=1
+        <if test="name != null and name != ''">
+            and name = #{name}
+        </if>
+    </select>
+
+    <!--
+        可以去掉1 = 1的判断操作
+    -->
+    <select id="findByAccountMove1Xml" parameterType="com.example.entity.Account" resultMap="accountXmlMap">
+        select * from account
+            <where>
+                <if test="name != null and name != ''">
+                    and name = #{name}
+                </if>
+            </where>
+    </select>
+
+
+    <!--
+            #{id}:是与item="id"中的命名是一致的(如： item = "xx" 则 #{xx})
+
+    -->
+    <select id="findAccountByIdsXml" parameterType="com.example.form.QueryForm" resultMap="accountXmlMap">
+        select * from account
+        <where>
+            <if test="ids != null and ids.size() > 0">
+                <foreach collection="ids" open="and id in (" close=")" item="id" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

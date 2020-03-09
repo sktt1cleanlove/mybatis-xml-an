@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+    namespace：指定接口类是哪个
+-->
+<mapper namespace="com.example.mapper.AuthorMapper">
+
+
+
+    <resultMap id="authorXmlMap" type="com.example.entity.Author">
+
+        <!--主键字段-->
+        <id column="id" property="id"></id>
+
+        <!--非主键字段-->
+        <result column="name" property="name"></result>
+
+
+        <!--
+            property="articles":指的是 private List<Article> articles;
+            ofType：指的是articles集合中的数据类型
+        -->
+        <collection property="articles" ofType="com.example.entity.Article">
+            <!--主键字段-->
+            <id column="article_id" property="id"></id>
+
+            <!--非主键字段-->
+            <result column="article_name" property="name"></result>
+
+            <result column="author_id" property="authorId"></result>
+        </collection>
+
+    </resultMap>
+
+    <!--
+        说白了resultMap就是语句查询结果的指定字段对应属性的显示
+    -->
+    <select id="findAuthorAll" resultMap="authorXmlMap">
+      SELECT au.*, a.name AS article_name, a.id AS article_id, a.author_id FROM author au left JOIN article a  ON a.author_id = au.id;
+    </select>
+
+</mapper>

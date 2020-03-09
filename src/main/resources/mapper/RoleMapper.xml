@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+    namespace：指定接口类是哪个
+-->
+<mapper namespace="com.example.mapper.RoleMapper">
+
+
+
+    <resultMap id="roleXmlMap" type="com.example.entity.Role">
+
+        <!--主键字段-->
+        <id column="id" property="id"></id>
+
+        <!--非主键字段-->
+        <result column="name" property="name"></result>
+        <!--配置关联-->
+        <collection property="powers" ofType="com.example.entity.Power">
+            <id column="power_id" property="id"></id>
+
+            <!--非主键字段-->
+            <result column="power_name" property="name"></result>
+        </collection>
+
+    </resultMap>
+
+    <select id="findRoleAll" resultMap="roleXmlMap">
+        SELECT r.*, p.id AS power_id, p.name AS power_name
+        FROM role r LEFT JOIN role_power rp ON r.id = rp.role_id
+        LEFT JOIN `power` p ON rp.power_id = p.id
+    </select>
+
+
+</mapper>
