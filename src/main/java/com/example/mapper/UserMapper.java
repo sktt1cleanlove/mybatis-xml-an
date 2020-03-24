@@ -2,11 +2,12 @@ package com.example.mapper;
 
 import com.example.entity.User;
 import com.example.form.QueryForm;
-import com.example.tk.MyBaseMapper;
+
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
 import org.springframework.stereotype.Repository;
 import tk.mybatis.mapper.common.Mapper;
+import tk.mybatis.mapper.common.MySqlMapper;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ import java.util.List;
 
 
 @Repository
-public interface UserMapper extends Mapper<User> {
+public interface UserMapper extends Mapper<User>, MySqlMapper<User> {
 
     @Select("select * from user")
     List<User> findAll();
